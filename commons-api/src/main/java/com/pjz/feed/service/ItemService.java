@@ -4,6 +4,7 @@ import com.pjz.feed.entity.bo.ItemDetailPageBo;
 import com.pjz.feed.entity.bo.ItemPublishBo;
 import com.pjz.feed.entity.vo.ItemDetailPageVo;
 import com.pjz.feed.entity.vo.ItemDetailVo;
+import com.pjz.feed.entity.vo.UserItemPageVo;
 
 import java.util.List;
 
@@ -33,4 +34,5 @@ public interface ItemService {
     ItemDetailPageVo getItemDetailPage(ItemDetailPageBo itemDetailPageBo);
 
 
+    List<UserItemPageVo> getItemsByUserIds(List<Long> following, Long current, Long size);
 }

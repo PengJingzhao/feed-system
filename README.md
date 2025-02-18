@@ -812,8 +812,8 @@ CREATE TABLE item (
 
   ：
 
-  ```
-  json复制代码{
+  ```json
+  {
     "code": 200,
     "message": "Success",
     "data": {
@@ -861,8 +861,8 @@ CREATE TABLE item (
 
   ：
 
-  ```
-  json复制代码{
+  ```json
+  {
     "code": 200,
     "message": "Success",
     "data": {
@@ -908,8 +908,8 @@ CREATE TABLE item (
 
   ：
 
-  ```
-  json复制代码{
+  ```json
+  {
     "code": 200,
     "message": "Success",
     "data": {
@@ -926,8 +926,8 @@ CREATE TABLE item (
 
 关系表存储用户的关注关系，支持快速查询。
 
-```
-sql复制代码CREATE TABLE user_relation (
+```sql
+CREATE TABLE user_relation (
     id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '主键',
     user_id BIGINT NOT NULL COMMENT '用户 ID',
     follow_id BIGINT NOT NULL COMMENT '被关注用户 ID',
@@ -961,8 +961,8 @@ sql复制代码CREATE TABLE user_relation (
 
 ### **1. 关注用户**
 
-```
-java复制代码public boolean followUser(Long userId, Long followId) {
+```json
+public boolean followUser(Long userId, Long followId) {
     // 检查是否已经关注
     if (relationRepository.existsByUserIdAndFollowId(userId, followId)) {
         return false;
@@ -983,8 +983,8 @@ java复制代码public boolean followUser(Long userId, Long followId) {
 
 ### **2. 取消关注**
 
-```
-java复制代码public boolean unfollowUser(Long userId, Long followId) {
+```java
+public boolean unfollowUser(Long userId, Long followId) {
     // 检查是否存在关注关系
     if (!relationRepository.existsByUserIdAndFollowId(userId, followId)) {
         return false;
@@ -1006,7 +1006,7 @@ java复制代码public boolean unfollowUser(Long userId, Long followId) {
 ### **3. 获取关注列表**
 
 ```
-java复制代码public List<Long> getFollowingList(Long userId, int page, int size) {
+public List<Long> getFollowingList(Long userId, int page, int size) {
     // 从 Redis 获取
     Set<Object> followingSet = redisTemplate.opsForSet().members("relation:following:" + userId);
     if (followingSet != null) {
@@ -1024,7 +1024,7 @@ java复制代码public List<Long> getFollowingList(Long userId, int page, int si
 ### **4. 获取粉丝列表**
 
 ```
-java复制代码public List<Long> getFollowersList(Long userId, int page, int size) {
+public List<Long> getFollowersList(Long userId, int page, int size) {
     // 同样从 Redis 或数据库查询
     ...
 }
@@ -1035,7 +1035,7 @@ java复制代码public List<Long> getFollowersList(Long userId, int page, int si
 ### **5. 查询关注关系**
 
 ```
-java复制代码public boolean isFollowing(Long userId, Long followId) {
+public boolean isFollowing(Long userId, Long followId) {
     // 从 Redis 查询
     Boolean isMember = redisTemplate.opsForSet().isMember("relation:following:" + userId, followId);
     if (isMember != null) {

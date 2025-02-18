@@ -6,6 +6,7 @@ import com.pjz.feed.entity.bo.ItemDetailPageBo;
 import com.pjz.feed.entity.bo.ItemPublishBo;
 import com.pjz.feed.entity.vo.ItemDetailPageVo;
 import com.pjz.feed.entity.vo.ItemDetailVo;
+import com.pjz.feed.entity.vo.UserItemPageVo;
 import com.pjz.feed.mapper.ItemMapper;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.BeanUtils;
@@ -69,5 +70,26 @@ public class ItemServiceImpl implements ItemService {
         itemDetailPageVo.setCurrent(page.getCurrent());
 
         return itemDetailPageVo;
+    }
+
+    @Override
+    public List<UserItemPageVo> getItemsByUserIds(List<Long> following, Long current, Long size) {
+
+        List<UserItemPageVo> userItemPageVos = following.stream().map(userId -> {
+
+            Page<Item> page = itemMapper.getItemPageByUserId(new ItemDetailPageBo(userId, current, size));
+            UserItemPageVo userItemPageVo = new UserItemPageVo();
+            List<ItemDetailVo> itemDetailPageVos = page.getRecords().stream().map(item -> {
+                ItemDetailVo itemDetailVo = new ItemDetailVo();
+                BeanUtils.copyProperties(item, itemDetailVo);
+                return itemDetailVo;
+            }).collect(Collectors.toList());
+            userItemPageVo.setItems(itemDetailPageVos);
+            userItemPageVo.setUserId(userId);
+
+            return userItemPageVo;
+        }).collect(Collectors.toList());
+
+        return userItemPageVos;
     }
 }
