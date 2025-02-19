@@ -13,6 +13,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -30,6 +31,8 @@ public class ItemServiceImpl implements ItemService {
         Item item = new Item();
 
         BeanUtils.copyProperties(itemPublishBo, item);
+        item.setCreatedAt(LocalDateTime.now());
+        item.setUpdatedAt(LocalDateTime.now());
 
         // 将新数据插入数据库
         Long itemId = itemMapper.addItem(item);

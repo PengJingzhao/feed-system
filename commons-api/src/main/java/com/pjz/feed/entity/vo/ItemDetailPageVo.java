@@ -4,13 +4,16 @@ package com.pjz.feed.entity.vo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ItemDetailPageVo {
+@ToString
+public class ItemDetailPageVo implements Serializable {
 
     private List<ItemDetailVo> items;
 

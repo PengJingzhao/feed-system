@@ -6,7 +6,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.pjz.feed.entity.Item;
 import com.pjz.feed.entity.bo.ItemDetailPageBo;
 import com.pjz.feed.entity.vo.ItemDetailPageVo;
+import org.apache.ibatis.annotations.Mapper;
 
+@Mapper
 public interface ItemMapper extends BaseMapper<Item> {
 
 

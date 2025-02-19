@@ -2,16 +2,20 @@ package com.pjz.feed.controller;
 
 import com.pjz.feed.entity.bo.FollowPageBo;
 import com.pjz.feed.entity.bo.ItemDetailPageBo;
+import com.pjz.feed.entity.bo.ItemPublishBo;
 import com.pjz.feed.entity.vo.FollowPageVo;
 import com.pjz.feed.entity.vo.FollowVo;
 import com.pjz.feed.entity.vo.ItemDetailVo;
 import com.pjz.feed.entity.vo.UserItemPageVo;
+import com.pjz.feed.result.CommonResult;
+import com.pjz.feed.service.FeedService;
 import com.pjz.feed.service.ItemService;
 import com.pjz.feed.service.RelationService;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -26,17 +30,19 @@ public class FeedController {
     @DubboReference
     private RelationService relationService;
 
+    @DubboReference
+    private FeedService feedService;
+
     @GetMapping("/user/{userId}")
-    public ResponseEntity<?> getUserFeed(@PathVariable("userId") Long userId, @RequestParam() Long current, @RequestParam() Long size) {
+    public CommonResult<List<UserItemPageVo>> getUserFeed(@PathVariable("userId") Long userId,
+                                                          @RequestParam(name = "current", defaultValue = "1") Long current,
+                                                          @RequestParam(name = "size", defaultValue = "10") Long size) {
+        return CommonResult.operateSuccess(feedService.getUserFeed(userId,current,size));
+    }
 
-        // 先获取当前用户的关注列表
-        FollowPageVo followingPage = relationService.getFollowingPage(new FollowPageBo(userId, current, size));
-        List<Long> following = followingPage.getFollowing().stream().map(FollowVo::getId).collect(Collectors.toList());
-
-        // 根据关注列表获取用户发布的动态
-        List<UserItemPageVo> items = itemService.getItemsByUserIds(following, current, size);
-
-        return ResponseEntity.ok(items);
+    @PostMapping("/item/publish")
+    public CommonResult<Long> publish(@RequestBody ItemPublishBo itemPublishBo){
+        return CommonResult.operateSuccess(feedService.publish(itemPublishBo));
     }
 
 }
