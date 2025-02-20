@@ -35,3 +35,5 @@ dubbo:
     address: nacos://127.0.0.1:8848
 server:
   port: 22003
+  servlet:
+    context-path: /api

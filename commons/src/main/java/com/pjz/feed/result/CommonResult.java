@@ -1,6 +1,5 @@
 package com.pjz.feed.result;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -8,7 +7,6 @@ import static com.pjz.feed.result.ResultConstant.*;
 
 @Data
 @Accessors(chain = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CommonResult<T> {
 
     private int code;
@@ -83,7 +81,6 @@ public class CommonResult<T> {
         return UnmodifiableCommonResult.NO_POWER;
     }
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     @SuppressWarnings("rawtypes")
     private static class UnmodifiableCommonResult<P> extends CommonResult<P> {
         protected static final UnmodifiableCommonResult SUCCESS = new UnmodifiableCommonResult<>(SUCCESS_CODE, OPERATE_SUCCESS_MESSAGE, true);

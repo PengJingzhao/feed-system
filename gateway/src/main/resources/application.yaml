@@ -1,0 +1,16 @@
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true # 启用服务发现动态路由
+      routes:
+        # Feed 服务路由
+        - id: feed-service
+          uri: lb://FEED-SERVICE
+          predicates:
+            - Path=/feed/**
+          filters:
+            - StripPrefix=1
+server:
+  port: 20000
