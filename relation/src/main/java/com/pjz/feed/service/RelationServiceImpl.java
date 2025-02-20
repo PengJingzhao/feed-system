@@ -67,4 +67,10 @@ public class RelationServiceImpl implements RelationService {
     public boolean check(Long userId, Long followId) {
         return false;
     }
+
+    @Override
+    public List<Long> getFollowersList(Long userId) {
+
+        return userRelationMapper.getFollowersList(userId);
+    }
 }

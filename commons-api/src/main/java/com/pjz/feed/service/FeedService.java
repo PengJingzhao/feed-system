@@ -11,4 +11,6 @@ public interface FeedService {
     Long publish(ItemPublishBo itemPublishBo);
 
     List<ItemDetailVo> getUserFeed(Long userId, Long current, Long size);
+
+    void saveFeedsToDatabase(List<Long> followers, Long itemId);
 }

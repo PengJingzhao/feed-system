@@ -16,6 +16,16 @@ spring:
         max-active: 10    # 最大活跃连接数
         max-idle: 5       # 最大空闲连接数
         min-idle: 2       # 最小空闲连接数
+  kafka:
+    bootstrap-servers: localhost:9092 # Kafka服务器地址
+    consumer:
+      group-id: feed-group # 消费者组ID
+      auto-offset-reset: earliest # 当没有偏移量时，从头消费
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
 dubbo:
   protocol:
     name: dubbo

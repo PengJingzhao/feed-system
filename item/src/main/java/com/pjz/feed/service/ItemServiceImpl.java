@@ -10,6 +10,7 @@ import com.pjz.feed.entity.vo.UserItemPageVo;
 import com.pjz.feed.mapper.ItemMapper;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -26,6 +27,9 @@ public class ItemServiceImpl implements ItemService {
     @Resource
     private ItemMapper itemMapper;
 
+    @Resource
+    private KafkaTemplate<String,String> kafkaTemplate;
+
     @Override
     public Long publish(ItemPublishBo itemPublishBo) {
 
@@ -37,6 +41,9 @@ public class ItemServiceImpl implements ItemService {
 
         // 将新数据插入数据库
         Long itemId = itemMapper.addItem(item);
+
+        // 发送消息，提醒下游服务更新数据
+        kafkaTemplate.send("feed_topic",String.valueOf(itemPublishBo.getUserId()),String.valueOf(itemId));
 
         return itemId;
     }

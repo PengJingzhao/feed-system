@@ -8,13 +8,17 @@ import com.pjz.feed.entity.vo.FollowVo;
 import com.pjz.feed.entity.vo.ItemDetailVo;
 import com.pjz.feed.entity.vo.UserItemPageVo;
 import com.pjz.feed.mapper.FeedMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Set;
@@ -24,6 +28,7 @@ import java.util.stream.Collectors;
 
 @Service
 @DubboService
+@Slf4j
 public class FeedServiceImpl implements FeedService {
 
     @DubboReference
@@ -70,8 +75,25 @@ public class FeedServiceImpl implements FeedService {
         List<ItemDetailVo> itemDetailVos = itemService.getItemDetailByIds(itemIds);
 
         // 将查询的动态缓存起来
-        feeds.forEach(feed -> redisTemplate.opsForZSet().add("feed:" + userId, feed.getItemId(), feed.getCreatedAt().toEpochSecond(ZoneOffset.UTC)));
+        feeds.forEach(feed -> redisTemplate.opsForZSet().add("feed:" + userId, feed.getItemId(), feed.getCreatedAt().getTime()));
 
         return itemDetailVos;
+    }
+
+    @Override
+    @Async
+    public void saveFeedsToDatabase(List<Long> followers, Long itemId) {
+
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+
+        List<Feed> feeds = followers.stream().map(followerId -> {
+            Feed feed = new Feed();
+            feed.setItemId(itemId);
+            feed.setUserId(followerId);
+            feed.setCreatedAt(timestamp);
+            return feed;
+        }).collect(Collectors.toList());
+
+        feedMapper.batchInsert(feeds);
     }
 }

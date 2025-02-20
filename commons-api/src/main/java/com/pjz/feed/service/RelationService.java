@@ -3,6 +3,8 @@ package com.pjz.feed.service;
 import com.pjz.feed.entity.bo.FollowPageBo;
 import com.pjz.feed.entity.vo.FollowPageVo;
 
+import java.util.List;
+
 public interface RelationService {
 
     /**
@@ -47,4 +49,5 @@ public interface RelationService {
      */
     boolean check(Long userId,Long followId);
 
+    List<Long> getFollowersList(Long userId);
 }
