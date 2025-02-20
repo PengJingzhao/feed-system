@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -75,24 +76,31 @@ public class ItemServiceImpl implements ItemService {
         return itemDetailPageVo;
     }
 
+
     @Override
-    public List<UserItemPageVo> getItemsByUserIds(List<Long> following, Long current, Long size) {
+    public List<ItemDetailVo> getItemDetailByItemIds(Set<Long> cachedFeeds) {
 
-        List<UserItemPageVo> userItemPageVos = following.stream().map(userId -> {
+        List<Item> items = itemMapper.getItemByIds(cachedFeeds);
 
-            Page<Item> page = itemMapper.getItemPageByUserId(new ItemDetailPageBo(userId, current, size));
-            UserItemPageVo userItemPageVo = new UserItemPageVo();
-            List<ItemDetailVo> itemDetailPageVos = page.getRecords().stream().map(item -> {
-                ItemDetailVo itemDetailVo = new ItemDetailVo();
-                BeanUtils.copyProperties(item, itemDetailVo);
-                return itemDetailVo;
-            }).collect(Collectors.toList());
-            userItemPageVo.setItems(itemDetailPageVos);
-            userItemPageVo.setUserId(userId);
-
-            return userItemPageVo;
+        List<ItemDetailVo> itemDetailVoList = items.stream().map(item -> {
+            ItemDetailVo itemDetailVo = new ItemDetailVo();
+            BeanUtils.copyProperties(item, itemDetailVo);
+            return itemDetailVo;
         }).collect(Collectors.toList());
 
-        return userItemPageVos;
+        return itemDetailVoList;
+    }
+
+    @Override
+    public List<ItemDetailVo> getItemDetailByIds(List<Long> itemIds) {
+
+        List<Item> items = itemMapper.getItemByIds(itemIds);
+        List<ItemDetailVo> itemDetailVoList = items.stream().map(item -> {
+            ItemDetailVo itemDetailVo = new ItemDetailVo();
+            BeanUtils.copyProperties(item, itemDetailVo);
+            return itemDetailVo;
+        }).collect(Collectors.toList());
+
+        return itemDetailVoList;
     }
 }

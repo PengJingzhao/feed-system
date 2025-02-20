@@ -15,6 +15,7 @@ import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -24,24 +25,18 @@ import java.util.stream.Collectors;
 @RequestMapping("/feed")
 public class FeedController {
 
-    @DubboReference
-    private ItemService itemService;
-
-    @DubboReference
-    private RelationService relationService;
-
-    @DubboReference
+    @Resource
     private FeedService feedService;
 
     @GetMapping("/user/{userId}")
-    public CommonResult<List<UserItemPageVo>> getUserFeed(@PathVariable("userId") Long userId,
-                                                          @RequestParam(name = "current", defaultValue = "1") Long current,
-                                                          @RequestParam(name = "size", defaultValue = "10") Long size) {
-        return CommonResult.operateSuccess(feedService.getUserFeed(userId,current,size));
+    public CommonResult<List<ItemDetailVo>> getUserFeed(@PathVariable("userId") Long userId,
+                                                        @RequestParam(name = "current", defaultValue = "1") Long current,
+                                                        @RequestParam(name = "size", defaultValue = "10") Long size) {
+        return CommonResult.operateSuccess(feedService.getUserFeed(userId, current, size));
     }
 
     @PostMapping("/item/publish")
-    public CommonResult<Long> publish(@RequestBody ItemPublishBo itemPublishBo){
+    public CommonResult<Long> publish(@RequestBody ItemPublishBo itemPublishBo) {
         return CommonResult.operateSuccess(feedService.publish(itemPublishBo));
     }
 

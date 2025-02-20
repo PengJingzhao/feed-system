@@ -7,6 +7,7 @@ import com.pjz.feed.entity.vo.ItemDetailVo;
 import com.pjz.feed.entity.vo.UserItemPageVo;
 
 import java.util.List;
+import java.util.Set;
 
 public interface ItemService {
 
@@ -33,6 +34,7 @@ public interface ItemService {
      */
     ItemDetailPageVo getItemDetailPage(ItemDetailPageBo itemDetailPageBo);
 
+    List<ItemDetailVo> getItemDetailByItemIds(Set<Long> cachedFeeds);
 
-    List<UserItemPageVo> getItemsByUserIds(List<Long> following, Long current, Long size);
+    List<ItemDetailVo> getItemDetailByIds(List<Long> itemIds);
 }

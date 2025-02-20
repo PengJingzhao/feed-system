@@ -6,6 +6,16 @@ spring:
     url: jdbc:mysql://localhost:3306/feed_system_10?useUnicode=true&characterEncoding=UTF-8
     username: root
     password: 2048711712P!
+  redis:
+    host: 127.0.0.1       # Redis 服务器地址
+    port: 6379            # Redis 服务器端口
+    database: 0           # 使用的数据库索引，默认是 0
+    timeout: 3000ms       # 超时时间
+    lettuce:
+      pool:
+        max-active: 10    # 最大活跃连接数
+        max-idle: 5       # 最大空闲连接数
+        min-idle: 2       # 最小空闲连接数
 dubbo:
   protocol:
     name: dubbo
