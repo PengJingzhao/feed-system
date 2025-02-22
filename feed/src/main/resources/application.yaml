@@ -26,6 +26,10 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848 # Nacos 服务地址
 dubbo:
   protocol:
     name: dubbo
@@ -35,5 +39,4 @@ dubbo:
     address: nacos://127.0.0.1:8848
 server:
   port: 22003
-  servlet:
-    context-path: /api
+

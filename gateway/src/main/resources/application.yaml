@@ -1,4 +1,9 @@
 spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/feed_system_10?useUnicode=true&characterEncoding=UTF-8
+    username: root
+    password: 2048711712P!
   cloud:
     gateway:
       discovery:
@@ -7,10 +12,28 @@ spring:
       routes:
         # Feed 服务路由
         - id: feed-service
-          uri: lb://FEED-SERVICE
+          uri: lb://FEED
           predicates:
-            - Path=/feed/**
+            - Path=/api/**
           filters:
             - StripPrefix=1
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:5000"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848 # Nacos 服务地址
+  application:
+    name: GATEWAY
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+
 server:
   port: 20000
