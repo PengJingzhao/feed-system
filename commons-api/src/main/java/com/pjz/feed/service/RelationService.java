@@ -1,6 +1,8 @@
 package com.pjz.feed.service;
 
 import com.pjz.feed.entity.bo.FollowPageBo;
+import com.pjz.feed.entity.bo.LikeBo;
+import com.pjz.feed.entity.bo.UnLikeBo;
 import com.pjz.feed.entity.vo.FollowPageVo;
 
 import java.util.List;
@@ -43,11 +45,29 @@ public interface RelationService {
 
     /**
      * 检查当前用户是否关注了某个用户
+     *
      * @param userId
      * @param followId
      * @return
      */
-    boolean check(Long userId,Long followId);
+    boolean check(Long userId, Long followId);
 
     List<Long> getFollowersList(Long userId);
+
+    /**
+     * 用户点赞动态
+     *
+     * @param likeBo
+     * @return
+     */
+    Void like(LikeBo likeBo);
+
+
+    /**
+     * 用户取消点赞动态
+     *
+     * @param unLikeBo
+     * @return
+     */
+    Void unlike(UnLikeBo unLikeBo);
 }

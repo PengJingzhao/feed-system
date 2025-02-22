@@ -1074,3 +1074,16 @@ public boolean isFollowing(Long userId, Long followId) {
 ## **总结**
 
 `Relation 服务` 的设计注重高效性和扩展性，采用 **Redis 缓存** 和 **关系表** 结合的方式，既能满足高并发查询需求，也能保证数据一致性。服务方法逻辑清晰，接口设计简单易用，可与其他服务（如 Feed 服务）无缝集成。
+
+## 部署
+
+### kafka
+
+依次启动zookeeper和kafka
+
+````bash
+.\bin\windows\zookeeper-server-start.bat .\config\zookeeper.properties
+
+.\bin\windows\kafka-server-start.bat .\config\server.properties
+````
+

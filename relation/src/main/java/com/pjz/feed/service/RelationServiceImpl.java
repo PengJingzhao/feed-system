@@ -2,12 +2,18 @@ package com.pjz.feed.service;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.pjz.feed.entity.Likes;
 import com.pjz.feed.entity.UserRelation;
 import com.pjz.feed.entity.bo.FollowPageBo;
+import com.pjz.feed.entity.bo.LikeBo;
+import com.pjz.feed.entity.bo.UnLikeBo;
 import com.pjz.feed.entity.vo.FollowPageVo;
 import com.pjz.feed.entity.vo.FollowVo;
+import com.pjz.feed.mapper.LikesMapper;
 import com.pjz.feed.mapper.UserRelationMapper;
 import org.apache.dubbo.config.annotation.DubboService;
+import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -22,6 +28,12 @@ public class RelationServiceImpl implements RelationService {
 
     @Resource
     private UserRelationMapper userRelationMapper;
+
+    @Resource
+    private LikesMapper likesMapper;
+
+    @Resource
+    private RedisTemplate<String, Long> redisTemplate;
 
     @Override
     public boolean follow(Long userId, Long followId) {
@@ -72,5 +84,35 @@ public class RelationServiceImpl implements RelationService {
     public List<Long> getFollowersList(Long userId) {
 
         return userRelationMapper.getFollowersList(userId);
+    }
+
+    @Override
+    public Void like(LikeBo likeBo) {
+
+        Likes likes = new Likes();
+        BeanUtils.copyProperties(likeBo, likes);
+
+        // 更新数据库
+        likesMapper.add(likes);
+
+        // 更新缓存
+        redisTemplate.opsForHash().increment("counts:likes", likeBo.getItemId(), 1);
+
+        return null;
+    }
+
+    @Override
+    public Void unlike(UnLikeBo unLikeBo) {
+
+        Likes likes = new Likes();
+        BeanUtils.copyProperties(unLikeBo, likes);
+
+        // 更新数据库
+        likesMapper.remove(likes);
+
+        // 更新缓存
+        redisTemplate.opsForHash().increment("counts:likes", unLikeBo.getItemId(), -1);
+
+        return null;
     }
 }

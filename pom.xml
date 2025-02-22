@@ -16,6 +16,7 @@
         <module>count</module>
         <module>commons-api</module>
         <module>commons</module>
+        <module>dubbo-gateway</module>
     </modules>
 
     <properties>

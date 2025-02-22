@@ -1,8 +1,6 @@
 package com.pjz.feed.controller;
 
-import com.pjz.feed.entity.bo.FollowPageBo;
-import com.pjz.feed.entity.bo.ItemDetailPageBo;
-import com.pjz.feed.entity.bo.ItemPublishBo;
+import com.pjz.feed.entity.bo.*;
 import com.pjz.feed.entity.vo.FollowPageVo;
 import com.pjz.feed.entity.vo.FollowVo;
 import com.pjz.feed.entity.vo.ItemDetailVo;
@@ -28,6 +26,9 @@ public class FeedController {
     @Resource
     private FeedService feedService;
 
+    @DubboReference
+    private RelationService relationService;
+
     @GetMapping("/user/{userId}")
     public CommonResult<List<ItemDetailVo>> getUserFeed(@PathVariable("userId") Long userId,
                                                         @RequestParam(name = "current", defaultValue = "1") Long current,
@@ -38,6 +39,16 @@ public class FeedController {
     @PostMapping("/item/publish")
     public CommonResult<Long> publish(@RequestBody ItemPublishBo itemPublishBo) {
         return CommonResult.operateSuccess(feedService.publish(itemPublishBo));
+    }
+
+    @PostMapping("/like")
+    public CommonResult<Void> like(@RequestBody LikeBo likeBo){
+        return CommonResult.operateSuccess(relationService.like(likeBo));
+    }
+
+    @DeleteMapping("/unlike")
+    public CommonResult<Void> unlike(@RequestBody UnLikeBo unLikeBo){
+        return CommonResult.operateSuccess(relationService.unlike(unLikeBo));
     }
 
 }
